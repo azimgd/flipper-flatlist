@@ -3,9 +3,12 @@ const fs = require('fs');
 const p = require('path');
 
 const connectionWeb = fs.readFileSync(p.join(__dirname, './babel/connection-web.ast'), {encoding:'utf8', flag:'r'});
-const itemLogger = fs.readFileSync(p.join(__dirname, './babel/itemLogger.ast'), {encoding:'utf8', flag:'r'});
+const itemLogger = fs.readFileSync(p.join(__dirname, './babel/item-logger.ast'), {encoding:'utf8', flag:'r'});
+const privateState = fs.readFileSync(p.join(__dirname, './babel/private-state.ast'), {encoding:'utf8', flag:'r'});
+
 const flipperConnectionAST = template.default.ast(connectionWeb);
 const itemLoggerAST = template.default.ast(itemLogger);
+const privateStateAST =  template.default.ast(privateState);
 
 const plugin = function ({types: t}) {
   return {
@@ -26,6 +29,9 @@ const plugin = function ({types: t}) {
           return;
         }
 
+        /**
+         * 
+         */
         if (path.node.key.name === 'getDerivedStateFromProps') {
           const returnVisitor = {
             ReturnStatement(path) {
@@ -47,6 +53,19 @@ const plugin = function ({types: t}) {
           }
   
           path.traverse(returnVisitor)
+        }
+      },
+
+      VariableDeclarator(path, state) {
+        if (!state.filename.includes('VirtualizeUtils.js') && !state.filename.includes('VirtualizeUtils/index.js')) {
+          return;
+        }
+
+        /**
+         * 
+         */
+        if (path.node.id.name === 'newCellCount') {
+          path.parentPath.insertAfter(privateStateAST);
         }
       },
     },

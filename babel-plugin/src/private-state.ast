@@ -1,0 +1,10 @@
+window.flatlistDebugger = {
+  overscanBegin,
+  overscanEnd,
+  visibleBegin,
+  visibleEnd,
+  itemCount,
+  scrollMetrics,
+};
+
+window.flatlistFlipper && window.flatlistFlipper.send('inspector', window.flatlistDebugger);
