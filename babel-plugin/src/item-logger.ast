@@ -1,0 +1,9 @@
+let items = [];
+let layouts = [];
+if (output.first || output.last) {
+  for (let ii = output.first; ii <= output.last; ii++) {
+    items.push(newProps.getItem(newProps.data, ii));
+    layouts.push(newProps.getItemLayout(newProps.data, ii));
+  }
+  window.flatlistFlipper && window.flatlistFlipper.send('items', {output, items, layouts});
+}
