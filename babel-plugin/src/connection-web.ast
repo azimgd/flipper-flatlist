@@ -1,0 +1,20 @@
+window.flatlistFlipper = null;
+
+let flipperClientPromise = import('js-flipper').then(({flipperClient}) => {
+  flipperClient.start('flatlistflipper');
+  return flipperClient;
+});
+
+flipperClientPromise?.then(flipperClient => {
+  flipperClient.addPlugin({
+    getId() {
+      return 'flatlistflipper';
+    },
+    onConnect(connection) {
+      window.flatlistFlipper = connection;
+    },
+    onDisconnect() {
+      window.flatlistFlipper = null;
+    }
+  })
+});
