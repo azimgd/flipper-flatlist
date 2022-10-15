@@ -30,7 +30,8 @@ const plugin = function ({types: t}) {
         }
 
         /**
-         * 
+         * Flatlist data array tracker. Injects into getDerivedStateFromProps 
+         * fetches layout and item contents for each rendered list item -> state<first,last>
          */
         if (path.node.key.name === 'getDerivedStateFromProps') {
           const returnVisitor = {
@@ -43,16 +44,16 @@ const plugin = function ({types: t}) {
                 t.identifier('output')
               );
               
-              path.parent.body.pop()
-              path.parent.body.push(wrappedOutput)
+              path.parent.body.pop();
+              path.parent.body.push(wrappedOutput);
               itemLoggerAST.forEach(node => {
                 path.parent.body.push(node);
               });
-              path.parent.body.push(wrappedReturn)
+              path.parent.body.push(wrappedReturn);
             }
           }
   
-          path.traverse(returnVisitor)
+          path.traverse(returnVisitor);
         }
       },
 
@@ -62,7 +63,7 @@ const plugin = function ({types: t}) {
         }
 
         /**
-         * 
+         * Tracks private state such as scrollMetrics overscan params etc.
          */
         if (path.node.id.name === 'newCellCount') {
           path.parentPath.insertAfter(privateStateAST);
