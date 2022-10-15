@@ -7,4 +7,4 @@ window.flatlistDebugger = {
   scrollMetrics,
 };
 
-window.flatlistFlipper && window.flatlistFlipper.send('inspector', window.flatlistDebugger);
+window.flatlist && window.flatlist.send('inspector', window.flatlistDebugger);

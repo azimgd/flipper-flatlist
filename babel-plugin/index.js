@@ -18,7 +18,7 @@ const plugin = function ({types: t}) {
           /**
            * Initialize flipper connection 
            */
-          if (state.filename.includes('VirtualizeUtils') || state.filename.includes('VirtualizeUtils/index.js')) {
+          if (state.filename.includes('VirtualizeUtils.js') || state.filename.includes('VirtualizeUtils/index.js')) {
             path.unshiftContainer('body', flipperConnectionAST);
           }
         },
