@@ -1,50 +1,63 @@
 import React from 'react';
-import {PluginClient, usePlugin, createState, useValue, Layout} from 'flipper-plugin';
+import {PluginClient, usePlugin, createState, useValue, Layout, DetailSidebar} from 'flipper-plugin';
+import List from './components/List';
+import Minimap from './components/Minimap';
+import Inspector from './components/Inspector';
 
-type Data = {
-  id: string;
-  message?: string;
+type Inspector = {
+  overscanBegin: any;
+  overscanEnd: any;
+  visibleBegin: any;
+  visibleEnd: any;
+  itemCount: any;
+  scrollMetrics: any;
+}
+
+type Items = {
+  output: any;
+  items: any;
+  layouts: any;
 };
 
 type Events = {
-  newData: Data;
+  inspector: Inspector;
+  items: Items;
 };
 
-// Read more: https://fbflipper.com/docs/tutorial/js-custom#creating-a-first-plugin
-// API: https://fbflipper.com/docs/extending/flipper-plugin#pluginclient
 export function plugin(client: PluginClient<Events, {}>) {
-  const data = createState<Record<string, Data>>({}, {persist: 'data'});
+  const inspector = createState<Record<string, Inspector>>({}, {});
+  const items = createState<Record<string, Items>>({}, {});
 
-  client.onMessage('newData', (newData) => {
-    data.update((draft) => {
-      draft[newData.id] = newData;
-    });
+  client.onMessage('inspector', (payload) => {
+    inspector.update(() => payload);
+  });
+  client.onMessage('items', (payload) => {
+    items.update(() => payload);
   });
 
-  client.addMenuEntry({
-    action: 'clear',
-    handler: async () => {
-      data.set({});
-    },
-    accelerator: 'ctrl+l',
-  });
-
-  return {data};
+  return {inspector, items};
 }
 
-// Read more: https://fbflipper.com/docs/tutorial/js-custom#building-a-user-interface-for-the-plugin
-// API: https://fbflipper.com/docs/extending/flipper-plugin#react-hooks
 export function Component() {
   const instance = usePlugin(plugin);
-  const data = useValue(instance.data);
+  const inspector = useValue(instance.inspector);
+  const items = useValue(instance.items);
 
   return (
-    <Layout.ScrollContainer>
-      {Object.entries(data).map(([id, d]) => (
-        <pre key={id} data-testid={id}>
-          {JSON.stringify(d)}
-        </pre>
-      ))}
-    </Layout.ScrollContainer>
+    <>
+      <Layout.ScrollContainer>
+        <Inspector items={items} inspector={inspector} />
+      </Layout.ScrollContainer>
+
+      <DetailSidebar>
+        <Layout.ScrollContainer>
+          <List items={items} inspector={inspector} />
+        </Layout.ScrollContainer>
+      </DetailSidebar>
+
+      <DetailSidebar>
+        <Minimap inspector={inspector} />
+      </DetailSidebar>
+    </>
   );
 }
