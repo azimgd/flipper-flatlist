@@ -3,10 +3,12 @@ const fs = require('fs');
 const p = require('path');
 
 const connectionWeb = fs.readFileSync(p.join(__dirname, './src/connection-web.ast'), {encoding:'utf8', flag:'r'});
+const connectionNative = fs.readFileSync(p.join(__dirname, './src/connection-native.ast'), {encoding:'utf8', flag:'r'});
 const itemLogger = fs.readFileSync(p.join(__dirname, './src/item-logger.ast'), {encoding:'utf8', flag:'r'});
 const privateState = fs.readFileSync(p.join(__dirname, './src/private-state.ast'), {encoding:'utf8', flag:'r'});
 
-const flipperConnectionAST = template.default.ast(connectionWeb);
+const connectionWebAST = template.default.ast(connectionWeb);
+const connectionNativeAST = template.default.ast(connectionNative);
 const itemLoggerAST = template.default.ast(itemLogger);
 const privateStateAST =  template.default.ast(privateState);
 
@@ -18,8 +20,16 @@ const plugin = function ({types: t}) {
           /**
            * Initialize flipper connection 
            */
-          if (state.filename.includes('VirtualizeUtils.js') || state.filename.includes('VirtualizeUtils/index.js')) {
-            path.unshiftContainer('body', flipperConnectionAST);
+          if (!state.filename.includes('VirtualizeUtils.js') && !state.filename.includes('VirtualizeUtils/index.js')) {
+            return;
+          }
+
+          if (state.opts.environment === 'web') {
+            path.unshiftContainer('body', connectionWebAST);
+          }
+
+          if (state.opts.environment === 'native') {
+            path.unshiftContainer('body', connectionWebAST);
           }
         },
       },

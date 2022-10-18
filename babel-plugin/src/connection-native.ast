@@ -1,0 +1,15 @@
+import {addPlugin} from 'react-native-flipper';
+
+global.flatlist = null;
+
+addPlugin({
+  getId() {
+    return 'flatlist';
+  },
+  onConnect(connection) {
+    global.flatlist = connection;
+  },
+  onDisconnect() {
+    global.flatlist = null;
+  }
+})
