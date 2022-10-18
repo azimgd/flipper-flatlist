@@ -7,34 +7,38 @@ const MinimapComponent = ({items, inspector}) => {
   }
 
   const dataSource = [{
-    key: '1',
+    key: 'rendered-range',
     source: 'rendered range',
     value: `${items.output.first} - ${items.output.last}`,
   }, {
-    key: '1',
-    source: 'screen size',
+    key: 'screen-length',
+    source: 'screen length',
     value: `${inspector.scrollMetrics.visibleLength}px`,
   }, {
-    key: '1',
+    key: 'content-length',
+    source: 'content length',
+    value: `${inspector.scrollMetrics.contentLength}px`,
+  }, {
+    key: 'tail-spacer',
+    source: 'tail spacer length',
+    value: `${inspector.tailSpacerLength}px`,
+  }, {
+    key: 'overscan-range',
     source: 'overscan range',
     value: `${inspector.overscanBegin}px - ${inspector.overscanEnd}px`,
   }, {
-    key: '1',
-    source: 'total size',
-    value: `${inspector.scrollMetrics.contentLength}px`,
-  }, {
-    key: '1',
+    key: 'total-count',
     source: 'total count',
     value: `${inspector.itemCount}`,
   }, {
-    key: '1',
+    key: 'velocity',
     source: 'velocity',
     value: `${inspector.scrollMetrics.velocity.toFixed(2)}`,
   }, {
-    key: '1',
+    key: 'doffset',
     source: 'doffset',
     value: `${inspector.scrollMetrics.dOffset} ${inspector.scrollMetrics.dt}`,
-  }, ];
+  }];
   
   const columns = [
     {

@@ -1,3 +1,11 @@
+const endFrame = getFrameMetricsApprox(itemCount - 1);
+const lastFrame = getFrameMetricsApprox(last);
+
+const tailSpacerLength =
+  endFrame.offset +
+  endFrame.length -
+  (lastFrame.offset + lastFrame.length);
+
 window.flatlistDebugger = {
   overscanBegin,
   overscanEnd,
@@ -5,6 +13,7 @@ window.flatlistDebugger = {
   visibleEnd,
   itemCount,
   scrollMetrics,
+  tailSpacerLength,
 };
 
 window.flatlist && window.flatlist.send('inspector', window.flatlistDebugger);
