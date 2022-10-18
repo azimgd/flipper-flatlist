@@ -29,7 +29,7 @@ const plugin = function ({types: t}) {
           }
 
           if (state.opts.environment === 'native') {
-            path.unshiftContainer('body', connectionWebAST);
+            path.unshiftContainer('body', connectionNativeAST);
           }
         },
       },
