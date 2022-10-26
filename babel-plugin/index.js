@@ -43,28 +43,23 @@ const plugin = function ({types: t}) {
          * Flatlist data array tracker. Injects into getDerivedStateFromProps 
          * fetches layout and item contents for each rendered list item -> state<first,last>
          */
-        if (path.node.key.name === 'getDerivedStateFromProps') {
-          const returnVisitor = {
-            ReturnStatement(path) {
-              const wrappedOutput = t.variableDeclaration('const', [
-                t.variableDeclarator(t.identifier('output'), path.node.argument)
-              ]);
-              
-              const wrappedReturn = t.returnStatement(
-                t.identifier('output')
-              );
-              
-              path.parent.body.pop();
-              path.parent.body.push(wrappedOutput);
-              itemLoggerAST.forEach(node => {
-                path.parent.body.push(node);
-              });
-              path.parent.body.push(wrappedReturn);
-            }
-          }
-  
-          path.traverse(returnVisitor);
+        if (path.node.key.name !== 'getDerivedStateFromProps') {  
+          return;
         }
+
+        // replaces `return {...}` with `const output = {...}`
+        path.traverse({
+          ReturnStatement(path) {
+            const wrappedOutput = t.variableDeclaration('const', [
+              t.variableDeclarator(t.identifier('output'), path.node.argument)
+            ]);
+            path.replaceWith(wrappedOutput);
+          },
+        });
+        
+        // adds logger to getDerivedStateFromProps#output and return statement
+        path.get('body').pushContainer('body', itemLoggerAST);
+        path.get('body').pushContainer('body', t.returnStatement(t.identifier('output')));
       },
 
       VariableDeclarator(path, state) {
@@ -72,12 +67,15 @@ const plugin = function ({types: t}) {
           return;
         }
 
+        if (path.node.id.name !== 'newCellCount') {
+          return;
+        }
+
         /**
          * Tracks private state such as scrollMetrics overscan params etc.
+         * inserts logger after `var newCellCount = {...}`
          */
-        if (path.node.id.name === 'newCellCount') {
-          path.parentPath.insertAfter(privateStateAST);
-        }
+        path.parentPath.insertAfter(privateStateAST);
       },
     },
   };
