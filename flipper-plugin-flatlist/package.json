@@ -1,6 +1,7 @@
 {
   "$schema": "https://fbflipper.com/schemas/plugin-package/v2.json",
   "name": "flipper-plugin-flatlist",
+  "author": "azimgd <me@azimgd.com> (https://github.com/azimgd)",
   "id": "flatlist",
   "version": "1.0.0",
   "pluginType": "client",

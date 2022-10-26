@@ -1,12 +1,12 @@
 {
-  "name": "babel-plugin",
+  "name": "babel-plugin-flipper-flatlist",
+  "author": "azimgd <me@azimgd.com> (https://github.com/azimgd)",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {},
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@babel/template": "^7.18.10"
   }

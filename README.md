@@ -6,11 +6,18 @@ This package exposes FlatList metrics and private variables from React Native (W
 ## Installation
 Install the plugin and specify it in your .babelrc with the custom environment. Here's an example:
 
+- Within your RN project
+yarn add `babel-plugin-flipper-flatlist`
+
 ```
-[path.resolve(__dirname, '../babel-plugin/index.js'), {
+// in your .babelrc
+[path.resolve(__dirname, 'babel-plugin-flipper-flatlist'), {
   environment: 'web', // [web|native]
 }],
 ```
+
+- Flipper plugin
+https://www.npmjs.com/package/babel-plugin-flipper-flatlist
 
 ### Web
 `yarn add js-flipper --dev`
